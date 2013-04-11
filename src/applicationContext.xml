@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+	<bean id="org.cn.pilot.itemmgr.service.ItemService" class="org.cn.pilot.itemmgr.service.impl.ItemServiceImpl" />
+	<bean id="org.cn.pilot.itemmgr.service.DataDictService" class="org.cn.pilot.itemmgr.service.impl.DataDictServiceImpl" />
+	<bean id="org.cn.pilot.itemmgr.dao.ItemDAO" class="org.cn.pilot.itemmgr.dao.impl.ItemDAO4MySQLImpl" />
+</beans>

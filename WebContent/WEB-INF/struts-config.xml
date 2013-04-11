@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+          "http://jakarta.apache.org/struts/dtds/struts-config_1_2.dtd">
+<struts-config>
+	<form-beans>
+		<form-bean name="itemForm" type="org.cn.pilot.itemmgr.web.forms.ItemActionForm"></form-bean>
+		<form-bean name="loginForm" type="org.cn.pilot.itemmgr.web.forms.LoginActionForm"></form-bean>
+	</form-beans>
+
+	<global-exceptions>
+		<exception key="errors.detail" type="org.cn.pilot.itemmgr.utils.AppException" path="/error.jsp" />
+	</global-exceptions>
+
+	<global-forwards>
+		<forward name="index" path="/index.jsp"></forward>
+	</global-forwards>
+
+	<action-mappings>
+		<action path="/login" type="org.cn.pilot.itemmgr.web.actions.LoginAction" name="loginForm" scope="request">
+			<forward name="success" path="/item.do" redirect="true" />
+		</action>
+
+		<action path="/item" type="org.cn.pilot.itemmgr.web.actions.ItemAction" name="itemForm" scope="request"
+			parameter="command">
+			<forward name="list" path="/WEB-INF/jsp/item_maint.jsp" /><!-- 这个还不能是redirect="true" 因为会有查询参数和pageNo，切记！！ -->
+			<forward name="item_maint" path="/item.do" redirect="true" /><!-- 重定向到/item.do，从头查询 -->
+			<forward name="show_add" path="/WEB-INF/jsp/item_add.jsp" />
+			<forward name="show_modify" path="/WEB-INF/jsp/item_modify.jsp" />
+			<forward name="show_detail" path="/WEB-INF/jsp/item_detail.jsp" />
+			<forward name="show_upload" path="/WEB-INF/jsp/item_upload.jsp" />
+		</action>
+	</action-mappings>
+
+	<message-resources parameter="MessageResources"></message-resources>
+</struts-config>
