@@ -1,9 +1,8 @@
 package org.cn.pilot.itemmgr.dao;
 
-import java.sql.Connection;
-
 import org.cn.pilot.itemmgr.domain.Item;
 import org.cn.pilot.itemmgr.utils.PageModel;
+import org.hibernate.Session;
 
 /**
  * @author npinc
@@ -16,7 +15,7 @@ public interface ItemDAO {
 	 * @param conn
 	 * @param item
 	 */
-	public void addItem(Connection conn, Item item);
+	public void addItem(Session session, Item item);
 
 	/**
 	 * 根据id查询
@@ -25,7 +24,7 @@ public interface ItemDAO {
 	 * @param itemNo
 	 * @return 如果存在返回Item对象，否则返回null
 	 */
-	public Item findItemById(Connection conn, String itemNo);
+	public Item findItemById(Session session, String itemNo);
 
 	/**
 	 * 分页查询
@@ -37,7 +36,7 @@ public interface ItemDAO {
 	 * @param pageSize
 	 * @return
 	 */
-	public PageModel<Item> findAllItem(Connection conn, String queryString, int pageNo, int pageSize);
+	public PageModel<Item> findAllItem(Session session, String queryString, int pageNo, int pageSize);
 
 	/**
 	 * 修改物料
@@ -45,7 +44,7 @@ public interface ItemDAO {
 	 * @param conn
 	 * @param item
 	 */
-	public void modifyItem(Connection conn, Item item);
+	public void modifyItem(Session session, Item item);
 
 	/**
 	 * 修改物料
@@ -53,7 +52,7 @@ public interface ItemDAO {
 	 * @param conn
 	 * @param item
 	 */
-	public void delItem(Connection conn, String[] itemNos);
+	public void delItem(Session session, String[] itemNos);
 	
 	/**
 	 * 保存上传的文件名称
@@ -61,5 +60,5 @@ public interface ItemDAO {
 	 * @param itemNo
 	 * @param uploadFileName
 	 */
-	public void modifyUploadFileNameField(Connection conn, String itemNo, String uploadFileName);
+	public void modifyUploadFileNameField(Session session, String itemNo, String uploadFileName);
 }

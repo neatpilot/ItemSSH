@@ -50,7 +50,6 @@
 		for ( var i in selectedFlags) {
 			if (selectedFlags[i].checked) {
 				flag = true;
-				break;
 			}
 		}
 		// 3.1Ã»ÓÐÑ¡Ôñ

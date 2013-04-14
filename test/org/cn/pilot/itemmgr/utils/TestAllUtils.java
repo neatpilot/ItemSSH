@@ -9,7 +9,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * @version --- ---[ Apr 10, 2013 12:12:51 AM ] -->
  */
 @RunWith(Suite.class)
-@SuiteClasses({ BeanFactoryTest.class, ConfigReaderTest.class, DBUtilTest.class })
+@SuiteClasses({ BeanFactoryTest.class})
 public class TestAllUtils {
 
 }

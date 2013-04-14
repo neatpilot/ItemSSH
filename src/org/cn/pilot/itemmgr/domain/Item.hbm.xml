@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.cn.pilot.itemmgr.domain.Item" table="t_item">
+		<id name="itemNo" column="item_no">
+			<generator class="assigned" />
+		</id>
+		<property name="itemName" column="item_name" />
+		<property name="spec" column="spec" />
+		<property name="pattern" column="pattern" />
+		<many-to-one name="itemCategory" column="item_category" />
+		<many-to-one name="itemUnit" column="item_unit" />
+		<property name="uploadFileName" column="upload_file_name" />
+	</class>
+</hibernate-mapping>

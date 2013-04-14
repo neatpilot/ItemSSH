@@ -6,10 +6,8 @@
 <title>SSH</title>
 </head>
 <body>
-	<form action="login.do" method="post">
-		”√ªß£∫<input type="text" name="username"><br> 
-		√‹¬Î£∫<input type="password" name="password"></br>
-		<input type="submit" value="µ«¬º"><br>
-	</form>
+	<html:errors />
+	<br>
+	<a href="#" onclick="history.go(-1)">∑µªÿ</a>
 </body>
 </html>

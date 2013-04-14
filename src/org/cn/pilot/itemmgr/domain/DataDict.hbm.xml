@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.cn.pilot.itemmgr.domain.AbstractDataDict" table="t_data_dict">
+		<id name="id">
+			<generator class="assigned" />
+		</id>
+		<discriminator type="string" column="category"/>
+		<property name="name"/>
+		<subclass name="org.cn.pilot.itemmgr.domain.ItemCategory" discriminator-value="C"/>
+		<subclass name="org.cn.pilot.itemmgr.domain.ItemUnit" discriminator-value="U"/>
+	</class>
+</hibernate-mapping>

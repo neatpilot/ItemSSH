@@ -1,17 +1,14 @@
 package org.cn.pilot.itemmgr.service.impl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.cn.pilot.itemmgr.domain.ItemCategory;
 import org.cn.pilot.itemmgr.domain.ItemUnit;
 import org.cn.pilot.itemmgr.service.DataDictService;
 import org.cn.pilot.itemmgr.utils.AppException;
-import org.cn.pilot.itemmgr.utils.DBUtil;
+import org.cn.pilot.itemmgr.web.filter.HibernateSessionFilter;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 /**
  * @author npinc
@@ -24,30 +21,22 @@ public class DataDictServiceImpl implements DataDictService {
 	 * @return
 	 */
 	public List<ItemCategory> getItemCategoryList() {
-		String sql = "select id, name from t_data_dict where category='C'";
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		List<ItemCategory> itemCategoryList = new ArrayList<ItemCategory>();
+		System.out.println("getItemCategoryList");
+		Session session = null;
+		Transaction transaction = null;
 		try {
-			conn = DBUtil.getConnection();
-			pstmt = conn.prepareStatement(sql);
-			rs = pstmt.executeQuery();
-			while (rs.next()) {
-				ItemCategory ic = new ItemCategory();
-				ic.setId(rs.getString("id"));
-				ic.setName(rs.getString("name"));
-				itemCategoryList.add(ic);
-			}
-		} catch (SQLException e) {
+			session = HibernateSessionFilter.getSession();
+			transaction = session.beginTransaction();
+			List<ItemCategory> itemCateoryList = session.createQuery("from ItemCategory").list();
+			transaction.commit();
+			return itemCateoryList;
+		} catch (Exception e) {
 			e.printStackTrace();
-			throw new AppException("取得物料类别错误！");
-		} finally {
-			DBUtil.close(rs);
-			DBUtil.close(pstmt);
-			DBUtil.close(conn);
+			if (null!=transaction) {
+				transaction.rollback();
+			}
+			throw new AppException("getItemCategoryList 失败");
 		}
-		return itemCategoryList;
 	}
 
 	/**
@@ -56,29 +45,21 @@ public class DataDictServiceImpl implements DataDictService {
 	 * @return
 	 */
 	public List<ItemUnit> getItemUnitList() {
-		String sql = "select id, name from t_data_dict where category='D'";
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		List<ItemUnit> itemUnitList = new ArrayList<ItemUnit>();
+		System.out.println("getItemUnitList");
+		Session session = null;
+		Transaction transaction = null;
 		try {
-			conn = DBUtil.getConnection();
-			pstmt = conn.prepareStatement(sql);
-			rs = pstmt.executeQuery();
-			while (rs.next()) {
-				ItemUnit iu = new ItemUnit();
-				iu.setId(rs.getString("id"));
-				iu.setName(rs.getString("name"));
-				itemUnitList.add(iu);
-			}
-		} catch (SQLException e) {
+			session = HibernateSessionFilter.getSession();
+			transaction = session.beginTransaction();
+			List<ItemUnit> itemUnitList = session.createQuery("from ItemUnit").list();
+			transaction.commit();
+			return itemUnitList;
+		} catch (Exception e) {
 			e.printStackTrace();
-			throw new AppException("取得计量单位错误！");
-		} finally {
-			DBUtil.close(rs);
-			DBUtil.close(pstmt);
-			DBUtil.close(conn);
+			if (null!=transaction) {
+				transaction.rollback();
+			}
+			throw new AppException("getItemUnitList 失败");
 		}
-		return itemUnitList;
 	}
 }

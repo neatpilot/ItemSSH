@@ -1,104 +1,120 @@
 package org.cn.pilot.itemmgr.service.impl;
 
-import java.sql.Connection;
-
 import org.cn.pilot.itemmgr.dao.ItemDAO;
 import org.cn.pilot.itemmgr.domain.Item;
 import org.cn.pilot.itemmgr.service.ItemService;
 import org.cn.pilot.itemmgr.utils.AppException;
 import org.cn.pilot.itemmgr.utils.BeanFactory;
-import org.cn.pilot.itemmgr.utils.DBUtil;
 import org.cn.pilot.itemmgr.utils.PageModel;
+import org.cn.pilot.itemmgr.web.filter.HibernateSessionFilter;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 /**
  * @author npinc
  * @version --- ---[ Apr 9, 2013 9:41:37 PM ] -->
  */
+
 public class ItemServiceImpl implements ItemService {
+	@Override
 	public void addItem(Item item) {
-		Connection conn = null;
+		Session session = null;
+		Transaction transaction = null;
 		try {
-			conn = DBUtil.getConnection();
-			if (getItemDAO().findItemById(conn, item.getItemNo()) != null) {
-				throw new AppException("物料代码重复，代码=[" + item.getItemNo() + "]！");
+			session = HibernateSessionFilter.getSession();
+			transaction = session.beginTransaction();
+			getItemDAO().addItem(session, item);
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (null != transaction) {
+				transaction.rollback();
 			}
-			getItemDAO().addItem(conn, item);
-		} catch (AppException e) {
-			throw e;
-		} finally {
-			DBUtil.close(conn);
+			// 因为没有在DAO中截取异常，所以要在Service层中截取异常
+			throw new AppException("addItem 失败");
 		}
 	}
 
-	/**
-	 * 分页查询
-	 * 
-	 * @param queryString
-	 * @param pageNo
-	 * @param pageSize
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public PageModel findAllItem(String queryString, int pageNo, int pageSize) {
-		Connection conn = null;
-		PageModel pageModel = null;
+	@Override
+	public PageModel<Item> findAllItem(String queryString, int pageNo, int pageSize) {
+		Session session = null;
+		Transaction transaction = null;
 		try {
-			conn = DBUtil.getConnection();
-			pageModel = getItemDAO().findAllItem(conn, queryString, pageNo, pageSize);
-		} finally {
-			DBUtil.close(conn);
+			session = HibernateSessionFilter.getSession();
+			transaction = session.beginTransaction();
+			PageModel<Item> allItem = getItemDAO().findAllItem(session, queryString, pageNo, pageSize);
+			transaction.commit();
+			return allItem;
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (null != transaction) {
+				transaction.rollback();
+			}
+			throw new AppException("findAllItem 失败");
 		}
-		return pageModel;
 	}
 
-	/**
-	 * 修改物料
-	 * 
-	 * @param item
-	 */
+	@Override
 	public void modifyItem(Item item) {
-		Connection conn = null;
+		Session session = null;
+		Transaction transaction = null;
 		try {
-			conn = DBUtil.getConnection();
-			getItemDAO().modifyItem(conn, item);
-		} finally {
-			DBUtil.close(conn);
+			session = HibernateSessionFilter.getSession();
+			transaction = session.beginTransaction();
+			getItemDAO().modifyItem(session, item);
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (null != transaction) {
+				transaction.rollback();
+			}
+			throw new AppException("modifyItem 失败");
 		}
 	}
 
-	/**
-	 * 删除物料
-	 * 
-	 * @param item
-	 */
+	@Override
 	public void delItem(String[] itemNos) {
-		Connection conn = null;
+		Session session = null;
+		Transaction transaction = null;
 		try {
-			conn = DBUtil.getConnection();
-			getItemDAO().delItem(conn, itemNos);
-		} finally {
-			DBUtil.close(conn);
+			session = HibernateSessionFilter.getSession();
+			transaction = session.beginTransaction();
+			getItemDAO().delItem(session, itemNos);
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (null != transaction) {
+				transaction.rollback();
+			}
+			throw new AppException("delItem 失败");
+		}
+	}
+
+	@Override
+	public Item findItemById(String itemNo) {
+		Session session = null;
+		Transaction transaction = null;
+		try {
+			Item item = null;
+			session = HibernateSessionFilter.getSession();
+			transaction = session.beginTransaction();
+			item = getItemDAO().findItemById(session, itemNo);
+			transaction.commit();
+			return item;
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (null != transaction) {
+				transaction.rollback();
+			}
+			throw new AppException("findItemById 失败");
 		}
 	}
 
 	/**
-	 * 根据物料代码查询
+	 * BeanFactory中保存了，实质是直接取的
 	 * 
-	 * @param itemNo
 	 * @return
 	 */
-	public Item findItemById(String itemNo) {
-		Connection conn = null;
-		Item item = null;
-		try {
-			conn = DBUtil.getConnection();
-			item = getItemDAO().findItemById(conn, itemNo);
-		} finally {
-			DBUtil.close(conn);
-		}
-		return item;
-	}
-
 	private ItemDAO getItemDAO() {
 		ItemDAO itemDao = (ItemDAO) BeanFactory.getInstance().getBean(ItemDAO.class);
 		return itemDao;
@@ -106,12 +122,19 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public void modifyUploadFileNameField(String itemNo, String uploadFileName) {
-		Connection conn = null;
+		Session session = null;
+		Transaction transaction = null;
 		try {
-			conn = DBUtil.getConnection();
-			getItemDAO().modifyUploadFileNameField(conn, itemNo, uploadFileName);
-		} finally {
-			DBUtil.close(conn);
+			session = HibernateSessionFilter.getSession();
+			transaction = session.beginTransaction();
+			getItemDAO().modifyUploadFileNameField(session, itemNo, uploadFileName);
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (null != transaction) {
+				transaction.rollback();
+			}
+			throw new AppException("modifyUpLoadFileNameField 失败");
 		}
 	}
 }
