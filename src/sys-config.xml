@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<config>
-	<database-info>
-		<driver-name>com.mysql.jdbc.Driver</driver-name>
-		<url>jdbc:mysql://localhost:3306/itemSSH</url>
-		<username>root</username>
-		<password>mysqladmin</password>
-	</database-info>
-</config>

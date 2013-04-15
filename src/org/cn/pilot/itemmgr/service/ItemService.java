@@ -23,7 +23,7 @@ public interface ItemService {
 	 * @param pageSize
 	 * @return
 	 */
-	public PageModel findAllItem(String queryString, int pageNo, int pageSize);
+	public PageModel<Item> findAllItem(String queryString, int pageNo, int pageSize);
 
 	/**
 	 * 修改物料

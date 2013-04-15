@@ -1,8 +1,7 @@
-package org.cn.pilot.itemmgr;
+package org.cn.pilot.itemmgr.init;
 
 import org.cn.pilot.itemmgr.domain.ItemCategory;
 import org.cn.pilot.itemmgr.domain.ItemUnit;
-import org.cn.pilot.itemmgr.utils.HibernateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.Test;

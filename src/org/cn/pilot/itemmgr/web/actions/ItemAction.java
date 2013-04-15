@@ -16,7 +16,6 @@ import org.cn.pilot.itemmgr.domain.ItemCategory;
 import org.cn.pilot.itemmgr.domain.ItemUnit;
 import org.cn.pilot.itemmgr.service.DataDictService;
 import org.cn.pilot.itemmgr.service.ItemService;
-import org.cn.pilot.itemmgr.utils.BeanFactory;
 import org.cn.pilot.itemmgr.utils.PageModel;
 import org.cn.pilot.itemmgr.web.forms.ItemActionForm;
 
@@ -25,6 +24,16 @@ import org.cn.pilot.itemmgr.web.forms.ItemActionForm;
  * @version --- ---[ Apr 9, 2013 9:44:49 PM ] -->
  */
 public class ItemAction extends BaseAction {
+	private ItemService itemService;
+	private DataDictService dataDictService;
+
+	public void setItemService(ItemService itemService) {
+		this.itemService = itemService;
+	}
+
+	public void setDataDictService(DataDictService dataDictService) {
+		this.dataDictService = dataDictService;
+	}
 
 	@Override
 	protected ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
@@ -36,10 +45,11 @@ public class ItemAction extends BaseAction {
 		if (0 == pageNo) {
 			pageNo = 1;
 		}
-		int pageSize = Integer.parseInt(this.getServlet().getServletContext().getInitParameter("page_size"));
+		// int pageSize = Integer.parseInt(this.getServlet().getServletContext().getInitParameter("page_size"));
+		// Spring使用DelegatingActionProxy代理，this.getServlet()为null，所以改为使用request.getSession.getServletContext()
+		int pageSize = Integer.parseInt(request.getSession().getServletContext().getInitParameter("page_size"));
 		String queryString = iaf.getQueryString();
-		ItemService itemService = (ItemService) BeanFactory.getInstance().getBean(ItemService.class);
-		PageModel pageModel = itemService.findAllItem(queryString, pageNo, pageSize);
+		PageModel<Item> pageModel = itemService.findAllItem(queryString, pageNo, pageSize);
 		// 传递给JSP
 		request.setAttribute("pageModel", pageModel);
 
@@ -58,8 +68,6 @@ public class ItemAction extends BaseAction {
 	 */
 	public ActionForward showAdd(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		ItemActionForm iaf = (ItemActionForm) form;
-		DataDictService dataDictService = (DataDictService) BeanFactory.getInstance().getBean(DataDictService.class);
 		List<ItemCategory> itemCategoryList = dataDictService.getItemCategoryList();
 		List<ItemUnit> itemUnitList = dataDictService.getItemUnitList();
 
@@ -82,7 +90,6 @@ public class ItemAction extends BaseAction {
 	public ActionForward add(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ItemActionForm iaf = (ItemActionForm) form;
-		ItemService itemService = (ItemService) BeanFactory.getInstance().getBean(ItemService.class);
 
 		Item item = new Item();
 		BeanUtils.copyProperties(item, iaf);
@@ -112,11 +119,9 @@ public class ItemAction extends BaseAction {
 	public ActionForward showModify(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ItemActionForm iaf = (ItemActionForm) form;
-		ItemService itemService = (ItemService) BeanFactory.getInstance().getBean(ItemService.class);
 		Item item = itemService.findItemById(iaf.getItemNo());
 		request.setAttribute("item", item);
 
-		DataDictService dataDictService = (DataDictService) BeanFactory.getInstance().getBean(DataDictService.class);
 		List<ItemCategory> itemCategoryList = dataDictService.getItemCategoryList();
 		List<ItemUnit> itemUnitList = dataDictService.getItemUnitList();
 
@@ -139,7 +144,6 @@ public class ItemAction extends BaseAction {
 			throws Exception {
 		// 1. init
 		ItemActionForm iaf = (ItemActionForm) form;
-		ItemService itemService = (ItemService) BeanFactory.getInstance().getBean(ItemService.class);
 		// 2. collect
 		Item item = new Item();
 		BeanUtils.copyProperties(item, iaf);
@@ -171,7 +175,6 @@ public class ItemAction extends BaseAction {
 			throws Exception {
 		// 1. init
 		ItemActionForm iaf = (ItemActionForm) form;
-		ItemService itemService = (ItemService) BeanFactory.getInstance().getBean(ItemService.class);
 		// 2. collect
 		String[] itemNos = iaf.getSelectFlag();
 		// 3. BL
@@ -194,7 +197,6 @@ public class ItemAction extends BaseAction {
 			throws Exception {
 		// 1. init
 		ItemActionForm iaf = (ItemActionForm) form;
-		ItemService itemService = (ItemService) BeanFactory.getInstance().getBean(ItemService.class);
 		// 2. collect
 		Item item = itemService.findItemById(iaf.getItemNo());
 		// 3. forward attribute
@@ -217,7 +219,6 @@ public class ItemAction extends BaseAction {
 			throws Exception {
 		// 1. init
 		ItemActionForm iaf = (ItemActionForm) form;
-		ItemService itemService = (ItemService) BeanFactory.getInstance().getBean(ItemService.class);
 		// 2. collect
 		// 3. forward attribute
 		Item item = itemService.findItemById(iaf.getItemNo());
@@ -240,12 +241,12 @@ public class ItemAction extends BaseAction {
 			throws Exception {
 		// 1. init
 		ItemActionForm iaf = (ItemActionForm) form;
-		ItemService itemService = (ItemService) BeanFactory.getInstance().getBean(ItemService.class);
 		// 2. collect
 		FormFile image = iaf.getItemFile();
 		String fileName = image.getFileName();
 		String itemNo = iaf.getItemNo();
-		String realPath = this.getServlet().getServletContext().getRealPath("/uimages");
+		// String realPath = this.getServlet().getServletContext().getRealPath("/uimages");
+		String realPath = request.getSession().getServletContext().getRealPath("/uimages");
 		// 3. write & change file name into database
 		// TODO 应该放到BL层去做（传byte[]）,而且保存的文件名应该是完整路径
 		itemService.modifyUploadFileNameField(itemNo, fileName);

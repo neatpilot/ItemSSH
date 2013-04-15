@@ -2,6 +2,7 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
+
 	<display-name>ItemSSH</display-name>
 
 	<!-- Standard Action Servlet Configuration (with debugging) -->
@@ -28,10 +29,20 @@
 		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
 
-	<!-- CharacterSet Filter -->
+	<!-- Spring Basic Configuration -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:applicationContext-*.xml</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- CharacterSet Spring Filter -->
 	<filter>
-		<filter-name>CharsetEncodingFilter</filter-name>
-		<filter-class>org.cn.pilot.itemmgr.web.filter.CharsetEncodingFilter</filter-class>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
 		<init-param>
 			<param-name>encoding</param-name>
 			<param-value>GB18030</param-value>
@@ -39,17 +50,17 @@
 	</filter>
 
 	<filter-mapping>
-		<filter-name>CharsetEncodingFilter</filter-name>
+		<filter-name>CharacterEncodingFilter</filter-name>
 		<url-pattern>*.do</url-pattern>
 	</filter-mapping>
 
-	<!-- Hibernate Open Session In View Filter -->
+	<!-- OpenSessionInViewFilter Spring Filter -->
 	<filter>
-		<filter-name>HibernateSessionFilter</filter-name>
-		<filter-class>org.cn.pilot.itemmgr.web.filter.HibernateSessionFilter</filter-class>
+		<filter-name>OpenSessionInViewFilter</filter-name>
+		<filter-class>org.springframework.orm.hibernate3.support.OpenSessionInViewFilter</filter-class>
 	</filter>
 	<filter-mapping>
-		<filter-name>HibernateSessionFilter</filter-name>
+		<filter-name>OpenSessionInViewFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
